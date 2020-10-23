@@ -40,6 +40,6 @@ export default {
 
 <style lang="scss">
   #layout-header, #layout-header + .main-wrapper {
-    min-width: 960px;
+    min-width: 750px;
   }
 </style>

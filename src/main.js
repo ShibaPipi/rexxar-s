@@ -9,6 +9,7 @@ import store from './store'
 import router from './router'
 import i18n from './lang' // internationalization
 import './icons' // icon
+import './permission' // permission control
 import './utils/error-log' // error log
 import * as filters from './filters' // global filters
 import getPageTitle from '@/utils/get-page-title'

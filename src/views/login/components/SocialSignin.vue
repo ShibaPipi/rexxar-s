@@ -15,10 +15,13 @@
 // import openWindow from '@/utils/open-window'
 
 export default {
-  name: 'SocialSignin',
+  name: 'SocialSignIn',
   methods: {
     wechatHandleClick(thirdpart) {
-      alert('ok')
+      this.$message({
+        message: '该功能正在开发...',
+        type: 'warning'
+      })
       // this.$store.commit('SET_AUTH_TYPE', thirdpart)
       // const appid = 'xxxxx'
       // const redirect_uri = encodeURIComponent('xxx/redirect?redirect=' + window.location.origin + '/auth-redirect')
@@ -26,7 +29,10 @@ export default {
       // openWindow(url, thirdpart, 540, 540)
     },
     tencentHandleClick(thirdpart) {
-      alert('ok')
+      this.$message({
+        message: '该功能正在开发...',
+        type: 'warning'
+      })
       // this.$store.commit('SET_AUTH_TYPE', thirdpart)
       // const client_id = 'xxxxx'
       // const redirect_uri = encodeURIComponent('xxx/redirect?redirect=' + window.location.origin + '/auth-redirect')

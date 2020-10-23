@@ -69,31 +69,38 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/login',
-    component: () => import('@/views/login'),
-    hidden: true
+    path: '/notices',
+    redirect: '/notices/index',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/notices'),
+        name: 'notices',
+        meta: { title: 'notices' }
+      }
+    ]
   },
   {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
+    path: '/login',
+    component: () => import('@/views/login'),
+    name: 'login',
+    meta: { title: 'login' }
   },
   {
     path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
+    component: () => import('@/views/error-page/404')
   },
   {
     path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
+    component: () => import('@/views/error-page/401')
   },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404' }
 ]
 
 export default new Router({
-  mode: 'history', // require service support
+  mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

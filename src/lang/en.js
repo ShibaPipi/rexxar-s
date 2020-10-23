@@ -7,6 +7,7 @@ export default {
   },
   route: {
     home: 'Home',
+    index: 'Welcome',
     users: 'Users',
     posts: 'Posts'
   },
@@ -23,7 +24,7 @@ export default {
     size: 'Global Size'
   },
   login: {
-    title: 'Login Form',
+    title: 'Login',
     logIn: 'Login',
     name: 'Name',
     password: 'Password',

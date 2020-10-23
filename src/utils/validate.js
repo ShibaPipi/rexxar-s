@@ -84,3 +84,25 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
+
+export const loginForm = {
+  name: '',
+  password: ''
+}
+
+export const loginRules = {
+  name: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { validator: (rule, value, callback) => {
+      if (!validName(value)) {
+        callback(new Error('Please enter the correct user name'))
+      } else {
+        callback()
+      }
+    }, trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 6, message: '密码长度不能小于 6 个字符', trigger: 'blur' }
+  ]
+}

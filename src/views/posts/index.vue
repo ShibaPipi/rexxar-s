@@ -23,13 +23,16 @@
             </div>
           </div>
         </div>
+        <el-pagination
+          small
+          background
+          layout="prev, pager, next"
+          :total="total"
+          :page-size="10"
+          :current-page="page"
+          @current-change="handleCurrentChange"
+        />
       </div>
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="total"
-        @current-change="handleCurrentChange"
-      />
     </section>
   </div>
 </template>

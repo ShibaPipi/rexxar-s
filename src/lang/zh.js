@@ -7,6 +7,7 @@ export default {
   },
   route: {
     home: '主页',
+    index: '欢迎',
     users: '用户列表',
     posts: '文章管理'
   },
@@ -23,7 +24,7 @@ export default {
     size: '布局大小'
   },
   login: {
-    title: '系统登录',
+    title: '登录',
     logIn: '登录',
     name: '账号',
     password: '密码',

@@ -12,7 +12,7 @@
             <li><router-link class="link" to="/posts">文章</router-link></li>
             <li><router-link class="link" to="">写文章</router-link></li>
             <li class="divider" />
-            <li><router-link class="link" to="">通知</router-link></li>
+            <li><router-link class="link" to="/notices">通知</router-link></li>
           </ul>
         </nav>
         <div id="tool-bar">
@@ -20,7 +20,7 @@
             <ul id="userNav" class="nav nav-default">
               <template v-if="token">
                 <li>
-                  <el-dropdown trigger="click">
+                  <el-dropdown trigger="click" @command="handleCommand">
                     <span class="dropdown-link">
                       <span class="user-name">ShibaPipi</span>
                       <i class="el-icon-caret-bottom" />
@@ -28,63 +28,92 @@
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item>我的主页</el-dropdown-item>
                       <el-dropdown-item>个人设置</el-dropdown-item>
-                      <el-dropdown-item :divided="true"><span @click="handleLogout">登出</span></el-dropdown-item>
+                      <el-dropdown-item :divided="true" command="logout">登出</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                 </li>
               </template>
               <template v-else>
                 <li class="guest">
-                  <button @click="LoginFormVisible = true">登录</button>
+                  <button @click="regFormVisible = true">去注册</button>
                 </li>
                 <li class="divider guest" />
-                <li class="guest"><router-link class="link" to="">去注册</router-link></li>
+                <li class="guest">
+                  <button @click="loginFormVisible = true">登录</button>
+                </li>
               </template>
             </ul>
           </div>
         </div>
       </div>
       <el-dialog
-        title="登 录"
-        width="30%"
-        :visible.sync="LoginFormVisible"
-        :show-close="false"
+        title="来吧，上号"
+        width="400px"
+        :visible.sync="loginFormVisible"
+        :center="true"
+      >
+        <login-form />
+      </el-dialog>
+      <el-dialog
+        title="注册之后登录，才能写文章"
+        width="400px"
+        :visible.sync="regFormVisible"
         :center="true"
       >
         <el-form
-          ref="loginForm"
-          :model="loginForm"
-          :rules="loginRules"
+          ref="regForm"
+          :model="regForm"
+          :rules="regRules"
         >
-          <el-form-item label="用户名" :label-width="formLabelWidth">
-            <el-input v-model="loginForm.name" autocomplete="off" />
+          <el-form-item
+            label="用户名"
+            :label-width="formLabelWidth"
+            prop="name"
+          >
+            <el-input
+              v-model="regForm.name"
+              placeholder="请输入用户名"
+            />
           </el-form-item>
-          <el-form-item label="密码" :label-width="formLabelWidth">
-            <el-input v-model="loginForm.password" placeholder="请输入密码" show-password autocomplete="off" />
+          <el-form-item
+            label="邮箱"
+            :label-width="formLabelWidth"
+            prop="email"
+          >
+            <el-input
+              v-model="regForm.email"
+              placeholder="请输入邮箱"
+            />
+          </el-form-item>
+          <el-form-item
+            label="密码"
+            :label-width="formLabelWidth"
+            prop="password"
+          >
+            <el-input
+              v-model="regForm.password"
+              placeholder="请输入密码"
+              show-password
+            />
+          </el-form-item>
+          <el-form-item
+            label="重复密码"
+            :label-width="formLabelWidth"
+            prop="password_confirmation"
+          >
+            <el-input
+              v-model="regForm.password_confirmation"
+              placeholder="请再次输入密码"
+              show-password
+            />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button
             type="primary"
-            :loading="loginLoading"
-            @click="submitForm"
+            :loading="regLoading"
+            @click="submitRegForm"
           >提 交</el-button>
-        </div>
-      </el-dialog>
-      <el-dialog title="收货地址" :visible.sync="RegFormVisible">
-        <el-form :model="regForm">
-          <el-form-item label="活动名称" :label-width="formLabelWidth">
-            <el-input v-model="regForm.name" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="活动区域" :label-width="formLabelWidth">
-            <el-select v-model="regForm.region" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai" />
-              <el-option label="区域二" value="beijing" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="RegFormVisible = false">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -92,14 +121,16 @@
 </template>
 
 <script>
+import LoginForm from '@/components/LoginForm'
 import { createNamespacedHelpers, mapGetters } from 'vuex'
 import { validName } from '@/utils/validate'
-import { Message } from 'element-ui'
+import { register } from '@/api/user'
 
 const { mapActions } = createNamespacedHelpers('user')
 
 export default {
   name: 'LayoutHeader',
+  components: { LoginForm },
   data() {
     const validateName = (rule, value, callback) => {
       if (!validName(value)) {
@@ -108,34 +139,42 @@ export default {
         callback()
       }
     }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+    const validatePasswordConfirmation = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.regForm.password) {
+        callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
       }
     }
     return {
-      loginLoading: false,
-      LoginFormVisible: false,
-      RegFormVisible: false,
-      loginForm: {
-        name: '',
-        password: ''
-      },
-      loginRules: {
-        name: [{ required: true, trigger: 'blur', validator: validateName }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-      },
+      loginFormVisible: false,
+      regLoading: false,
+      regFormVisible: false,
       regForm: {
         name: '',
+        email: '',
         password: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        password_confirmation: ''
+      },
+      regRules: {
+        name: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { validator: validateName, trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, message: '密码长度不能小于 6 个字符', trigger: 'blur' }
+        ],
+        password_confirmation: [
+          { required: true, message: '请再次输入密码', trigger: 'blur' },
+          { validator: validatePasswordConfirmation, trigger: 'blur' }
+        ]
       },
       formLabelWidth: '80px'
     }
@@ -143,35 +182,60 @@ export default {
   computed: {
     ...mapGetters(['token'])
   },
+  watch: {
+    token: function() {
+      if (this.token) {
+        this.loginFormVisible = false
+      }
+    }
+  },
   methods: {
     ...mapActions(['login', 'logout']),
-    submitForm() {
-      this.$refs['loginForm'].validate(valid => {
+    submitRegForm() {
+      this.$refs['regForm'].validate(valid => {
         if (valid) {
-          this.handleLogin()
+          this.handleRegister()
         } else {
-          console.log('error submit!!')
           return false
         }
       })
     },
-    async handleLogin() {
-      this.loginLoading = true
-      const res = await this.login(this.loginForm)
-      this.loginLoading = false
-      if (res.message) {
-        Message({
-          message: res.message,
-          type: 'error',
-          duration: 3 * 1000
-        })
-      }
-      if (this.token) {
-        this.LoginFormVisible = false
-      }
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     },
-    handleLogout() {
-      this.logout()
+    async handleRegister() {
+      this.regLoading = true
+      const res = await register(this.regForm)
+      this.regLoading = false
+      let message, type
+      if (res.code !== 200) {
+        message = res.message
+        type = 'error'
+      } else {
+        message = res.data
+        type = 'success'
+        this.regFormVisible = false
+        this.loginFormVisible = true
+      }
+      this.$message({
+        message,
+        type,
+        duration: 3 * 1000
+      })
+    },
+    async handleLogout() {
+      await this.logout()
+      this.$message({
+        message: '退出成功',
+        type: 'success',
+        duration: 3 * 1000
+      })
+      this.$router.go(0)
+    },
+    handleCommand(command) {
+      if (command === 'logout') {
+        this.handleLogout()
+      }
     }
   }
 }
@@ -340,5 +404,9 @@ export default {
 
   .nav > li > button:focus {
     outline: none;
+  }
+
+  .el-dropdown-menu {
+    width: fit-content;
   }
 </style>
