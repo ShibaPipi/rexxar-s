@@ -32,6 +32,9 @@ export default {
     thirdparty: 'Or connect with...',
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
   },
+  posts: {
+    create: '请使用富文本编辑器编写文章。。。'
+  },
   components: {
     documentation: 'Documentation',
     tinymceTips: 'Rich text is a core feature of the management backend, but at the same time it is a place with lots of pits. In the process of selecting rich texts, I also took a lot of detours. The common rich texts on the market have been basically used, and I finally chose Tinymce. See the more detailed rich text comparison and introduction.',

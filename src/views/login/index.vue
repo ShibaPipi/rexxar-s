@@ -139,7 +139,6 @@ export default {
         if (valid) {
           this.handleLogin()
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -151,7 +150,6 @@ export default {
         path: this.redirect || '/',
         query: this.otherQuery
       })
-      this.loading = false
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {

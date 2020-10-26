@@ -32,6 +32,9 @@ export default {
     thirdparty: '第三方登录',
     thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
   },
+  posts: {
+    create: '请使用富文本编辑器编写文章。。。'
+  },
   components: {
     documentation: '文档',
     tinymceTips: '富文本是管理后台一个核心的功能，但同时又是一个有很多坑的地方。在选择富文本的过程中我也走了不少的弯路，市面上常见的富文本都基本用过了，最终权衡了一下选择了Tinymce。更详细的富文本比较和介绍见',

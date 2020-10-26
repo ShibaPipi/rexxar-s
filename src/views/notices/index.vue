@@ -25,8 +25,8 @@
           </el-timeline>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col class="load-more">
+      <el-row type="flex">
+        <el-col>
           <el-button
             type="text"
             size="small"
@@ -95,10 +95,9 @@ export default {
   $themeHead: $dewberryHead;
   $themeTail: $dewberryTail;
 
-  .load-more {
-    text-align: center;
-
+  .el-col {
     .load-more-btn {
+      margin: 0 auto;
       font-size: 14px;
       color: $themeTail;
     }

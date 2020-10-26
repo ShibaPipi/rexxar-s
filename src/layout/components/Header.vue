@@ -10,7 +10,7 @@
             <li><router-link class="link" to="/index">首页</router-link></li>
             <li class="divider" />
             <li><router-link class="link" to="/posts">文章</router-link></li>
-            <li><router-link class="link" to="">写文章</router-link></li>
+            <li><router-link class="link" to="/posts/create">写文章</router-link></li>
             <li class="divider" />
             <li><router-link class="link" to="/notices">通知</router-link></li>
           </ul>

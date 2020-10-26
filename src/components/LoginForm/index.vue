@@ -38,7 +38,6 @@
 <script>
 import { loginForm, loginRules } from '@/utils/validate'
 import { createNamespacedHelpers } from 'vuex'
-import { Message } from 'element-ui'
 
 const { mapActions } = createNamespacedHelpers('user')
 
@@ -68,9 +67,15 @@ export default {
       const res = await this.login(this.loginForm)
       this.loading = false
       if (res !== undefined) {
-        Message({
+        this.$message({
           message: res.message,
           type: 'error',
+          duration: 3 * 1000
+        })
+      } else {
+        this.$message({
+          message: '登录成功~',
+          type: 'success',
           duration: 3 * 1000
         })
       }
