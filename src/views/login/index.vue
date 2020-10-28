@@ -26,7 +26,7 @@
           tabindex="1"
         />
       </el-form-item>
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-tooltip v-model="capsTooltip" content="大写锁定已打开" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -41,7 +41,7 @@
             tabindex="2"
             @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
+            @keyup.enter.native="submitForm"
           />
           <span class="show-pwd" @click="showPwd">
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
@@ -54,7 +54,7 @@
             class="login-button"
             :loading="loading"
             type="primary"
-            @click.native.prevent="handleLogin"
+            @click.native.prevent="submitForm"
           >
             {{ $t('login.logIn') }}
           </el-button>
@@ -102,7 +102,7 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query
+        const { query } = route
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
@@ -135,9 +135,10 @@ export default {
       })
     },
     submitForm() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs['loginForm'].validate(valid => {
         if (valid) {
-          this.handleLogin()
+          console.log(valid)
+          // this.handleLogin()
         } else {
           return false
         }
@@ -145,11 +146,20 @@ export default {
     },
     async handleLogin() {
       this.loading = true
-      await this.login(this.loginForm)
-      this.$router.push({
-        path: this.redirect || '/',
-        query: this.otherQuery
-      })
+      const res = await this.login(this.loginForm)
+      console.log(res)
+      this.loading = false
+      if (res.code === 201) {
+        this.$message({
+          message: '登录成功~',
+          type: 'success',
+          duration: 3 * 1000
+        })
+        this.$router.push({
+          path: this.redirect || '/',
+          query: this.otherQuery
+        })
+      }
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {

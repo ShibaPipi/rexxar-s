@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import { MessageBox, Message } from 'element-ui'
+import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken, setToken } from '@/utils/auth'
 
@@ -13,6 +13,7 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
+    store.commit('app/TOGGLE_SPAN_LOADING', true) // open SpanLoading
     // do something before request is sent
     config.headers = {
       'Accept': 'application/json',
@@ -25,6 +26,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
+    store.commit('app/TOGGLE_SPAN_LOADING', false) // close SpanLoading
     // do something with request error
     console.log(error) // for debug
     return Promise.reject(error)
@@ -41,6 +43,7 @@ service.interceptors.request.use(
  */
 service.interceptors.response.use(
   response => {
+    store.commit('app/TOGGLE_SPAN_LOADING', false) // close SpanLoading
     // Refresh token silently, no sense of continuation of login status.
     const token = response.headers.authorization
     if (token !== undefined) {
@@ -51,25 +54,31 @@ service.interceptors.response.use(
     return response.data
   },
   error => {
-    // const { code, message } = error.response.data
-    // if (code === 422) {
-    //   // to re-login
-    //   MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-    //     confirmButtonText: 'Re-Login',
-    //     cancelButtonText: 'Cancel',
-    //     type: 'warning'
-    //   }).then(() => {
-    //     store.dispatch('user/resetToken').then(() => {
-    //       location.reload()
-    //     })
-    //   })
-    // }
-    // Message({
-    //   message: message,
-    //   type: 'error',
-    //   duration: 5 * 1000
-    // })
+    store.commit('app/TOGGLE_SPAN_LOADING', false) // close SpanLoading
     console.log(error.response.data)
+    const { code, message } = error.response.data
+    switch (code) {
+      case 422:
+        // to re-login
+        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+          confirmButtonText: 'Re-Login',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('user/resetToken').then(() => {
+            location.reload()
+          })
+        })
+        break
+      case 400:
+        Message.error({
+          message,
+          duration: 3 * 1000
+        })
+        break
+      default:
+        break
+    }
     return error.response.data
   }
 )

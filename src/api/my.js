@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function fetchList(page) {
+export function fetchNoticeList(page) {
   return request({
-    url: '/user/notices',
+    url: '/my/notices',
     method: 'get',
     params: { page }
   })

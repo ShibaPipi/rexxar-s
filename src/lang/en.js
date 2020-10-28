@@ -33,7 +33,7 @@ export default {
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
   },
   posts: {
-    create: '请使用富文本编辑器编写文章。。。'
+    create: '请使用富文本编辑器编写文章内容。。。'
   },
   components: {
     documentation: 'Documentation',

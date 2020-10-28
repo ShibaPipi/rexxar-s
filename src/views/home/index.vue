@@ -10,7 +10,7 @@
         <github-corner class="github-corner" />
         <div class="home-header">
           <router-link class="link" to="/index">
-            <img class="home-logo" src="@/assets/home/logo.jpg" alt="logo">
+            <img class="home-logo" src="@/assets/logo.jpg" alt="logo">
           </router-link>
         </div>
         <div class="home-body">

@@ -5,7 +5,8 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  introduction: ''
+  introduction: '',
+  loginFormVisible: false
 }
 
 const mutations = {
@@ -20,19 +21,20 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_LOGINFORMVISIBLE: (state, loginFormVisible) => {
+    state.loginFormVisible = loginFormVisible
   }
 }
 
 const actions = {
   async login({ commit }, { name, password }) {
     const res = await login({ name: name.trim(), password })
-
-    if (res.status === 'error') {
-      return res
+    if (res.code === 201) {
+      const { data: { token }} = res
+      commit('SET_TOKEN', token)
+      setToken(token)
     }
-    const { data: { token }} = res
-    commit('SET_TOKEN', token)
-    setToken(token)
   },
 
   async getInfo({ commit }) {

@@ -7,3 +7,18 @@ export function fetchList(page, perPage) {
     params: { page, perPage }
   })
 }
+
+export function store(data) {
+  return request({
+    url: '/posts',
+    method: 'post',
+    data
+  })
+}
+
+export function show(id) {
+  return request({
+    url: '/posts/' + id,
+    method: 'get'
+  })
+}

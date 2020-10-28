@@ -97,14 +97,14 @@ export default {
   mounted() {
     this.init()
   },
-  activated() {
-    if (window.tinymce) {
-      this.initTinymce()
-    }
-  },
-  deactivated() {
-    this.destroyTinymce()
-  },
+  // activated() {
+  //   if (window.tinymce) {
+  //     this.initTinymce()
+  //   }
+  // },
+  // deactivated() {
+  //   this.destroyTinymce()
+  // },
   destroyed() {
     this.destroyTinymce()
   },

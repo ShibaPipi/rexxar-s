@@ -71,19 +71,24 @@ export const constantRoutes = [
         component: () => import('@/views/posts/profile'),
         name: 'posts.create',
         meta: { title: 'post.create' }
+      },
+      {
+        path: ':id',
+        component: () => import('@/views/posts/show'),
+        name: 'posts.show',
+        meta: { title: 'posts.show' }
       }
     ]
   },
   {
-    path: '/notices',
-    redirect: '/notices/index',
+    path: '/my',
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/notices'),
-        name: 'notices',
-        meta: { title: 'notices' }
+        path: 'notices',
+        component: () => import('@/views/my/notices'),
+        name: 'my.notices',
+        meta: { title: 'my.notices' }
       }
     ]
   },

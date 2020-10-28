@@ -1,5 +1,5 @@
 <template>
-  <div class="loading-mask">
+  <div class="loading-mask" :style="'position: ' + position + ';'">
     <div class="loading-spinner">
       <span />
       <span />
@@ -12,7 +12,13 @@
 
 <script>
 export default {
-  name: 'SpanLoading'
+  name: 'SpanLoading',
+  props: {
+    position: {
+      type: String,
+      default: 'absolute'
+    }
+  }
 }
 </script>
 
@@ -23,7 +29,7 @@ export default {
   $themeTail: $dewberryTail;
 
   .loading-mask {
-    position: absolute;
+    position: fixed;
     z-index: 2000;
     background-color: hsla(0, 0%, 100%, .9);
     top: 0;

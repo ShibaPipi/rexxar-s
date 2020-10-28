@@ -7,7 +7,7 @@ import { Message } from 'element-ui'
 
 NProgress.configure({ showSpinner: false })
 
-const blackList = ['notices', 'posts.create']
+const blackList = ['my.notices', 'posts.create']
 
 router.beforeEach(async(to, from, next) => {
   document.title = getPageTitle(to.meta.title)
@@ -23,7 +23,8 @@ router.beforeEach(async(to, from, next) => {
     if (blackList.indexOf(to.name) !== -1) {
       next(`/login?redirect=${to.path}`)
       Message.error({
-        message: '抱歉，该页面需登录访问~'
+        message: '抱歉，该页面需登录访问~',
+        duration: 3 * 1000
       })
       NProgress.done()
     }

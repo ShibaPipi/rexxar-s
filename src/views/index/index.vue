@@ -1,6 +1,6 @@
 <template>
-  <div class="main-wrapper">
-    <section class="blog-head">
+  <div class="index-main-wrapper">
+    <!-- <section class="blog-head">
       <div class="head-container">
         <h2 class="blog-heading">DevBlog - A Blog Template Made For Developers</h2>
         <div class="intro">Welcome to my blog. Subscribe and get my latest blog post in your inbox.</div>
@@ -28,45 +28,68 @@
           </el-form-item>
         </el-form>
       </div>
-    </section>
+    </section> -->
     <section class="blog-content">
-      <span-loading v-if="loading" />
-      <el-row v-else :gutter="20" class="rexxar-fade-in">
+      <el-row :gutter="20" class="rexxar-fade-in">
         <el-col :span="16">
-          <div
-            v-for="post in postList"
-            :key="post.id"
-            class="single-blog-post"
-          >
-            <div class="post-meta-box">
-              <ul class="author-meta">
-                <li class="tag"><router-link to="#">Topic</router-link></li>
-                <li class="date">Published {{ post.published_at }}</li>
-              </ul>
-              <h4 class="post-title"><router-link to="#">{{ post.title }}</router-link></h4>
-              <ul class="share-meta">
-                <li>
-                  <router-link to="#"><i class="el-icon-chat-round icon" />Comments ({{ post.comments_count }})</router-link>
-                </li>
-                <li>
-                  <router-link to="#"><i class="el-icon-star-off icon" />Likes ({{ post.likes_count }})</router-link>
-                </li>
-                <li>
-                  <el-tooltip class="item" effect="dark" content="Share it" placement="right">
-                    <button><i class="el-icon-share icon" />Share</button>
-                  </el-tooltip>
-                </li>
-              </ul>
-              <p>{{ post.content }}</p>
-              <router-link to="#" class="more-link">Read more →</router-link>
+          <el-row>
+            <el-carousel
+              :interval="5000"
+              height="300px"
+            >
+              <el-carousel-item v-for="banner in bannerList" :key="banner">
+                <el-image :src="banner" fit="cover">
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline" />
+                  </div>
+                </el-image>
+              </el-carousel-item>
+            </el-carousel>
+          </el-row>
+          <el-row>
+            <div
+              v-for="post in postList"
+              :key="post.id"
+              class="single-blog-post"
+            >
+              <div class="post-meta-box">
+                <ul class="author-meta">
+                  <li
+                    v-for="topic in post.topics"
+                    :key="topic.id"
+                    class="tag"
+                  >
+                    <router-link to="">{{ topic.name }}</router-link>
+                  </li>
+                  <li class="date">发布于 {{ post.published_at }}</li>
+                  <li class="author">By {{ post.user.name }}</li>
+                </ul>
+                <h4 class="post-title"><router-link :to="'/posts/' + post.id">{{ post.title }}</router-link></h4>
+                <ul class="share-meta">
+                  <li>
+                    <router-link to=""><i class="el-icon-chat-round icon" />Comments ({{ post.comments_count }})</router-link>
+                  </li>
+                  <li>
+                    <router-link to=""><i class="el-icon-star-off icon" />Likes ({{ post.likes_count }})</router-link>
+                  </li>
+                  <li>
+                    <el-tooltip class="item" effect="dark" content="Share it" placement="right">
+                      <button><i class="el-icon-share icon" />Share</button>
+                    </el-tooltip>
+                  </li>
+                </ul>
+                <p>{{ post.content_limit }}</p>
+                <router-link :to="'/posts/' + post.id" class="more-link">Read more →</router-link>
+              </div>
             </div>
-          </div>
+          </el-row>
+
         </el-col>
         <el-col :span="8">
           <div class="sidebar-box bg-box about-me">
             <h6 class="sidebar-title">about me</h6>
             <img src="@/assets/index/founder.jpg" alt="founder image">
-            <p>Hi, I am David Walmart. As for now I'm only focusing my attention on enjoyment. I'm being my true self with the values, dreams and goals that I have....</p>
+            <p>Hi，我是 Shibapipi。在享受编程的同时，更要热爱生活...</p>
           </div>
           <div class="sidebar-box bg-box sidebar-categories">
             <h6 class="sidebar-title">topics</h6>
@@ -74,7 +97,7 @@
               <li
                 v-for="topic in topicList"
                 :key="topic.id"
-              ><router-link to="#">{{ topic.name }}</router-link></li>
+              ><router-link to="">{{ topic.name }}</router-link></li>
             </ul>
           </div>
           <div class="sidebar-box bg-box sidebar-trending-post">
@@ -85,14 +108,18 @@
               class="single-trending-post clearfix"
             >
               <div class="post">
-                <h6><a href="#">{{ founderPost.title }}</a></h6>
+                <h6>
+                  <router-link :to="'/posts/' + founderPost.id">
+                    {{ founderPost.title }}
+                  </router-link>
+                </h6>
                 <ul>
                   <li
                     v-for="topic in founderPost.topics"
                     :key="topic.topic_id"
                     class="tag"
                   >
-                    <router-link to="#">{{ topic.name }}</router-link>
+                    <router-link to="">{{ topic.name }}</router-link>
                   </li>
                   <li class="date">{{ founderPost.published_at }}</li>
                 </ul>
@@ -105,7 +132,7 @@
               <li
                 v-for="aphorism in aphorismList"
                 :key="aphorism"
-              ><a href="#">{{ aphorism }}</a></li>
+              ><router-link to="">{{ aphorism }}</router-link></li>
             </ul>
           </div>
           <div class="sidebar-box bg-box sidebar-tags">
@@ -114,7 +141,7 @@
               <li
                 v-for="keyword in keywordList"
                 :key="keyword"
-              ><a href="#">{{ keyword }}</a></li>
+              ><router-link to="">{{ keyword }}</router-link></li>
             </ul>
           </div>
         </el-col>
@@ -124,15 +151,14 @@
 </template>
 
 <script>
-import SpanLoading from '@/components/SpanLoading'
 import { fetch } from '@/api/index'
 
 export default {
   name: 'Posts',
-  components: { SpanLoading },
   data() {
     return {
       loading: false,
+      bannerList: [],
       postList: [],
       topicList: [],
       founderPostList: [],
@@ -154,7 +180,8 @@ export default {
   methods: {
     async getList() {
       this.loading = true
-      const { data: { posts, topics, founderPosts, aphorism, keyword }} = await fetch()
+      const { data: { banners, posts, topics, founderPosts, aphorism, keyword }} = await fetch()
+      this.bannerList = banners
       this.postList = posts
       this.topicList = topics
       this.founderPostList = founderPosts
@@ -175,7 +202,7 @@ export default {
   $themeHead: $dewberryHead;
   $themeTail: $dewberryTail;
 
-  .main-wrapper {
+  .index-main-wrapper {
     font-family: 'Open Sans', sans-serif;
     font-weight: normal;
     color: #5e5e5e;
@@ -267,7 +294,7 @@ export default {
 
     .blog-head {
       background: #fafafa;
-      padding: 3rem 0;
+      padding-top: 3rem;
       text-align: center;
 
       .head-container {
@@ -320,6 +347,7 @@ export default {
     .blog-content {
       position: relative;
       min-height: 350px;
+      margin-top: 3rem;
       padding: 0 1.5rem;
 
       .single-blog-post {
@@ -353,13 +381,9 @@ export default {
                 color: #fff;
                 padding: 0 12px;
               }
-
-              a:hover {
-               color: $themeHead;
-              }
             }
 
-            .date {
+            .date, .author {
               color: $themeHead;
               text-transform: uppercase;
               color: #808080;
@@ -367,7 +391,7 @@ export default {
               cursor: pointer;
             }
 
-            .date:hover {
+            .date:hover, .author:hover {
               color: $themeHead;
             }
           }

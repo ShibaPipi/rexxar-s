@@ -1,8 +1,7 @@
 <template>
   <div class="main-wrapper">
     <section class="blog-content">
-      <span-loading v-if="listLoading" />
-      <div v-else class="post-list rexxar-fade-in">
+      <div class="post-list rexxar-fade-in">
         <div
           v-for="post in list"
           :key="post.id"
@@ -11,15 +10,16 @@
           <div class="media">
             <div class="media-body">
               <h3 class="blog-title">
-                <router-link to="#">{{ post.title }}</router-link>
+                <router-link :to="'/posts/' + post.id">{{ post.title }}</router-link>
               </h3>
               <div class="meta">
-                <span class="date">Published {{ post.published_at }}</span>
-                <span class="time">5 min read</span>
-                <span class="comment"><a href="#">{{ post.comments_count }} comments</a></span>
+                <span class="date divide">发布于 {{ post.published_at }}</span>
+                <span class="author divide">BY {{ post.user.name }}</span>
+                <span class="time divide">5 min read</span>
+                <span class="comment"><router-link to="">{{ post.comments_count }} comments</router-link></span>
               </div>
-              <div class="intro">{{ post.content }}</div>
-              <router-link to="#" class="more-link">Read more →</router-link>
+              <div class="intro">{{ post.content_limit }}</div>
+              <router-link :to="'/posts/' + post.id" class="more-link">Read more →</router-link>
             </div>
           </div>
         </div>
@@ -38,12 +38,10 @@
 </template>
 
 <script>
-import SpanLoading from '@/components/SpanLoading'
 import { fetchList } from '@/api/post'
 
 export default {
   name: 'Posts',
-  components: { SpanLoading },
   data() {
     return {
       listLoading: false,
@@ -82,4 +80,72 @@ export default {
 
 <style lang="scss" scoped>
   @import "~@/styles/post.scss";
+
+  .blog-content {
+    .post-list {
+            max-width: 820px;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+
+            .item {
+                margin-bottom: 3rem;
+
+                .media {
+                    display: flex;
+                    align-items: flex-start;
+
+                    .media-body {
+                        flex: 1;
+
+                        .blog-title {
+                            font-size: 1.275rem;
+                            margin-bottom: .25rem;
+
+                            a {
+                                color: #292929;
+                            }
+                        }
+
+                        .meta {
+                            color: #8f8f8f;
+                            font-size: 0.8125rem;
+                            margin-bottom: .25rem;
+
+                            span {
+                                display: inline-block;
+
+                                a {
+                                    color: #292929;
+                                }
+                            }
+
+                            .divide:after {
+                                content: "";
+                                display: inline-block;
+                                width: 3px;
+                                height: 3px;
+                                border-radius: 50%;
+                                background: #8f8f8f;
+                                margin-left: 0.5rem;
+                                margin-right: 0.5rem;
+                                position: relative;
+                                top: -3px;
+                            }
+                        }
+
+                        .intro {
+                            font-size: .875rem;;
+                        }
+
+                        .more-link {
+                            font-size: .8125rem;
+                        }
+                    }
+                }
+            }
+        }
+  }
 </style>

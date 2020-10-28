@@ -66,19 +66,11 @@ export default {
       this.loading = true
       const res = await this.login(this.loginForm)
       this.loading = false
-      if (res !== undefined) {
-        this.$message({
-          message: res.message,
-          type: 'error',
-          duration: 3 * 1000
-        })
-      } else {
-        this.$message({
-          message: '登录成功~',
-          type: 'success',
-          duration: 3 * 1000
-        })
-      }
+      res.code === 201 && this.$message({
+        message: '登录成功~',
+        type: 'success',
+        duration: 3 * 1000
+      })
     }
   }
 }

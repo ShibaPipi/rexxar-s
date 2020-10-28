@@ -3,7 +3,7 @@ export default {
     'switch': '语言切换成功'
   },
   layout: {
-    title: 'ShibaPipi 的个人博客'
+    title: 'ShibaPipi'
   },
   route: {
     home: '主页',
@@ -33,7 +33,7 @@ export default {
     thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
   },
   posts: {
-    create: '请使用富文本编辑器编写文章。。。'
+    create: '请使用富文本编辑器编写文章内容。。。'
   },
   components: {
     documentation: '文档',

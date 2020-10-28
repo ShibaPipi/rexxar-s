@@ -1,9 +1,7 @@
 <template>
   <div class="main-wrapper">
     <section class="blog-content">
-      <span-loading v-if="listLoading" />
       <el-row
-        v-else
         type="flex"
         justify="center"
         class="rexxar-fade-in"
@@ -25,8 +23,8 @@
           </el-timeline>
         </el-col>
       </el-row>
-      <el-row type="flex">
-        <el-col>
+      <el-row type="flex" justify="center">
+        <el-col :span="6">
           <el-button
             type="text"
             size="small"
@@ -42,12 +40,10 @@
 </template>
 
 <script>
-import SpanLoading from '@/components/SpanLoading'
-import { fetchList } from '@/api/notice'
+import { fetchNoticeList } from '@/api/my'
 
 export default {
-  name: 'Notices',
-  components: { SpanLoading },
+  name: 'MyNotices',
   data() {
     return {
       loading: false,
@@ -73,7 +69,7 @@ export default {
       } else {
         this.loading = true
       }
-      const { data } = (await fetchList(this.page)).data
+      const { data } = (await fetchNoticeList(this.page)).data
       if (data.length === 0) {
         this.noMore = true
         this.loadMoreBtnText = '没有更多了^_^'
@@ -95,7 +91,7 @@ export default {
   $themeHead: $dewberryHead;
   $themeTail: $dewberryTail;
 
-  .el-col {
+  .blog-content {
     .load-more-btn {
       margin: 0 auto;
       font-size: 14px;
