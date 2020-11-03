@@ -7,3 +7,18 @@ export function fetchNoticeList(page) {
     params: { page }
   })
 }
+
+export function getInfo() {
+  return request({
+    url: '/my/info',
+    method: 'get'
+  })
+}
+
+export function updateInfo(data) {
+  return request({
+    url: '/my/update',
+    method: 'put',
+    data
+  })
+}

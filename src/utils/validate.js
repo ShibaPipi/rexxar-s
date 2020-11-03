@@ -92,7 +92,7 @@ export const loginForm = {
 
 export const loginRules = {
   name: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { required: true, message: '请输入昵称', trigger: 'blur' },
     { validator: (rule, value, callback) => {
       if (!validName(value)) {
         callback(new Error('Please enter the correct user name'))

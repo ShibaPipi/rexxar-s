@@ -55,6 +55,12 @@ service.interceptors.response.use(
   },
   error => {
     store.commit('app/TOGGLE_SPAN_LOADING', false) // close SpanLoading
+    // Refresh token silently, no sense of continuation of login status.
+    const token = error.response.headers.authorization
+    if (token !== undefined) {
+      store.commit('user/SET_TOKEN', token)
+      setToken(token)
+    }
     console.log(error.response.data)
     const { code, message } = error.response.data
     switch (code) {

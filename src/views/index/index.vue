@@ -30,12 +30,17 @@
       </div>
     </section> -->
     <section class="blog-content">
-      <el-row :gutter="20" class="rexxar-fade-in">
-        <el-col :span="16">
+      <el-row
+        :gutter="30"
+        class="rexxar-fade-in"
+        type="flex"
+        justify="center"
+      >
+        <el-col :xs="22" :sm="14" :md="14" :lg="12" :xl="10">
           <el-row>
             <el-carousel
               :interval="5000"
-              height="300px"
+              height="350px"
             >
               <el-carousel-item v-for="banner in bannerList" :key="banner">
                 <el-image :src="banner" fit="cover">
@@ -85,7 +90,7 @@
           </el-row>
 
         </el-col>
-        <el-col :span="8">
+        <el-col :xs="0" :sm="7" :md="7" :lg="6" :xl="5">
           <div class="sidebar-box bg-box about-me">
             <h6 class="sidebar-title">about me</h6>
             <img src="@/assets/index/founder.jpg" alt="founder image">
@@ -151,7 +156,7 @@
 </template>
 
 <script>
-import { fetch } from '@/api/index'
+import { fetch } from '@/api'
 
 export default {
   name: 'Posts',
@@ -196,14 +201,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scpoed>
+<style lang="scss" scoped>
   @import "~@/styles/variables.scss";
 
   $themeHead: $dewberryHead;
   $themeTail: $dewberryTail;
 
   .index-main-wrapper {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-weight: normal;
     color: #5e5e5e;
     font-size: 14px;
@@ -386,7 +391,6 @@ export default {
             .date, .author {
               color: $themeHead;
               text-transform: uppercase;
-              color: #808080;
               font-size: 13px;
               cursor: pointer;
             }

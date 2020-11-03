@@ -11,7 +11,7 @@
     >
       <el-input
         v-model="loginForm.name"
-        placeholder="请输入用户名"
+        placeholder="请输入昵称"
       />
     </el-form-item>
     <el-form-item
@@ -52,7 +52,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login', 'getInfo']),
     submitLoginForm() {
       this.$refs['loginForm'].validate(valid => {
         if (valid) {
@@ -66,7 +66,7 @@ export default {
       this.loading = true
       const res = await this.login(this.loginForm)
       this.loading = false
-      res.code === 201 && this.$message({
+      res.code === 200 && this.$message({
         message: '登录成功~',
         type: 'success',
         duration: 3 * 1000

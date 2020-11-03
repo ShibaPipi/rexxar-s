@@ -16,7 +16,7 @@
       <p class="copyright">
         <span>Copyright © 2020 All rights reserved.</span>
         <span>-</span>
-        <span>津ICP备19011078号</span>
+        <span>津 ICP 备 19011078 号</span>
       </p>
     </div>
   </footer>

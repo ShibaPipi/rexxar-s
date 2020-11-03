@@ -8,13 +8,6 @@ export function login(data) {
   })
 }
 
-export function getInfo() {
-  return request({
-    url: '/users/info',
-    method: 'get'
-  })
-}
-
 export function register(data) {
   return request({
     url: '/register',
@@ -26,6 +19,13 @@ export function register(data) {
 export function logout() {
   return request({
     url: '/logout',
+    method: 'get'
+  })
+}
+
+export function getInfo(id) {
+  return request({
+    url: '/users/' + id + 'info',
     method: 'get'
   })
 }

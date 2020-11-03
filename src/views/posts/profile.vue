@@ -1,48 +1,49 @@
 <template>
   <div class="main-wrapper">
     <section class="blog-content">
-      <el-row>
-        <el-form
-          ref="form"
-          :model="form"
-          :rules="rules"
-          label-position="left"
-        >
-          <el-form-item label="标题" prop="title">
-            <el-input
-              ref="name"
-              v-model="form.title"
-              placeholder="请输入标题"
-            />
-          </el-form-item>
-          <el-form-item prop="content">
-            <aside>
-              {{ $t('posts.create') }}
-            </aside>
-            <tinymce ref="content" v-model="form.content" :height="300" />
-          </el-form-item>
-        </el-form>
-      </el-row>
-      <el-row type="flex" justify="end">
-        <el-col :span="4">
-          <el-button
-            size="small"
-            type="primary"
-            plain
-            @click="preview"
-          ><svg-icon icon-class="form" />预览 HTMl 结果</el-button>
+      <el-row type="flex" justify="center">
+        <el-col :xs="22" :sm="18" :md="16" :lg="16" :xl="14">
+          <el-form
+            ref="form"
+            :model="form"
+            :rules="rules"
+            label-position="left"
+            label-width="60px"
+          >
+            <el-form-item label="标题" prop="title">
+              <el-input
+                ref="name"
+                v-model="form.title"
+                placeholder="请输入标题"
+              />
+            </el-form-item>
+            <el-form-item label="内容" prop="content">
+              <aside>
+                {{ $t('posts.create') }}
+              </aside>
+              <tinymce ref="content" v-model="form.content" :height="300" />
+            </el-form-item>
+          </el-form>
+          <el-row type="flex" justify="end">
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              @click="preview"
+            ><svg-icon icon-class="form" />预览 HTMl 结果</el-button>
+          </el-row>
+          <el-row type="flex" justify="end">
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              @click="submitForm"
+            >保存</el-button>
+          </el-row>
+          <el-row v-if="showHtml">
+            <div class="editor-content" v-html="form.content" />
+          </el-row>
         </el-col>
-        <el-col :span="2">
-          <el-button
-            size="small"
-            type="primary"
-            plain
-            @click="submitForm"
-          >保存</el-button>
-        </el-col>
-      </el-row>
-      <el-row v-if="showHtml">
-        <div class="editor-content" v-html="content" />
       </el-row>
     </section>
   </div>

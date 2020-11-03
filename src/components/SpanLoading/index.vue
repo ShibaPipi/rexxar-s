@@ -31,13 +31,12 @@ export default {
   .loading-mask {
     position: fixed;
     z-index: 2000;
-    background-color: hsla(0, 0%, 100%, .9);
+    background-color: hsla(0, 0%, 100%, .8);
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: 2000;
-    background: #f9f9f9;
     overflow: hidden;
     transition: all .3s ease-in-out;
     -webkit-transition: all .3s ease-in-out;

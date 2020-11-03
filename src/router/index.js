@@ -89,6 +89,18 @@ export const constantRoutes = [
         component: () => import('@/views/my/notices'),
         name: 'my.notices',
         meta: { title: 'my.notices' }
+      },
+      {
+        path: 'info',
+        component: () => import('@/views/my/info'),
+        name: 'my.info',
+        meta: { title: 'my.info' }
+      },
+      {
+        path: 'setting',
+        component: () => import('@/views/my/setting'),
+        name: 'my.setting',
+        meta: { title: 'my.setting' }
       }
     ]
   },
@@ -100,11 +112,13 @@ export const constantRoutes = [
   },
   {
     path: '/404',
-    component: () => import('@/views/error-page/404')
+    component: () => import('@/views/error-page/404'),
+    name: '404'
   },
   {
     path: '/401',
-    component: () => import('@/views/error-page/401')
+    component: () => import('@/views/error-page/401'),
+    name: '401'
   },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404' }

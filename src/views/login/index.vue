@@ -137,8 +137,7 @@ export default {
     submitForm() {
       this.$refs['loginForm'].validate(valid => {
         if (valid) {
-          console.log(valid)
-          // this.handleLogin()
+          this.handleLogin()
         } else {
           return false
         }
@@ -147,9 +146,8 @@ export default {
     async handleLogin() {
       this.loading = true
       const res = await this.login(this.loginForm)
-      console.log(res)
       this.loading = false
-      if (res.code === 201) {
+      if (res.code === 200) {
         this.$message({
           message: '登录成功~',
           type: 'success',
@@ -230,7 +228,6 @@ $cursor: #fff;
 
   .login-container {
     background: $themeHead linear-gradient(-90deg, $themeTail 0, $themeHead 100%);
-    background-color: $themeHead;
     border-top-color: $themeTail;
     min-height: 100%;
     width: 100%;
@@ -281,7 +278,7 @@ $cursor: #fff;
         position: absolute;
         top: 3px;
         font-size: 18px;
-        right: 0px;
+        right: 0;
         cursor: pointer;
       }
     }

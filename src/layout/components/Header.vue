@@ -3,16 +3,26 @@
     <div id="mainHeader">
       <div class="header-container">
         <hgroup id="heading">
-          <h1><router-link to="/">{{ $t('layout.title') }}</router-link></h1>
+          <h1>
+            <router-link to="/">{{ $t('layout.title') }}</router-link>
+          </h1>
         </hgroup>
         <nav id="nav-bar">
           <ul class="nav nav-default">
-            <li><router-link class="link" to="/index">首页</router-link></li>
+            <li>
+              <router-link class="link" to="/index">首页</router-link>
+            </li>
             <li class="divider" />
-            <li><router-link class="link" to="/posts">文章</router-link></li>
-            <li><router-link class="link" to="/posts/create">写文章</router-link></li>
+            <li>
+              <router-link class="link" to="/posts">文章</router-link>
+            </li>
+            <li>
+              <router-link class="link" to="/posts/create">写文章</router-link>
+            </li>
             <li class="divider" />
-            <li><router-link class="link" to="/my/notices">通知</router-link></li>
+            <li>
+              <router-link class="link" to="/pets">Cat &amp; Dog</router-link>
+            </li>
           </ul>
         </nav>
         <div id="tool-bar">
@@ -22,12 +32,21 @@
                 <li>
                   <el-dropdown trigger="click" @command="handleCommand">
                     <span class="dropdown-link">
-                      <span class="user-name">ShibaPipi</span>
+                      <span class="user-avatar user-info">
+                        <avatar
+                          :size="30"
+                          :src="avatar"
+                          :name="name"
+                          :space="8"
+                        />
+                      </span>
+                      <span class="user-info">{{ name }}</span>
                       <i class="el-icon-caret-bottom" />
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>我的主页</el-dropdown-item>
-                      <el-dropdown-item>个人设置</el-dropdown-item>
+                      <el-dropdown-item command="notice">通知</el-dropdown-item>
+                      <el-dropdown-item :divided="true" command="info">我的主页</el-dropdown-item>
+                      <el-dropdown-item command="setting">个人设置</el-dropdown-item>
                       <el-dropdown-item :divided="true" command="logout">登出</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -72,7 +91,7 @@
           >
             <el-input
               v-model="regForm.name"
-              placeholder="请输入用户名"
+              placeholder="请输入昵称"
             />
           </el-form-item>
           <el-form-item
@@ -113,7 +132,8 @@
             type="primary"
             :loading="regLoading"
             @click="submitRegForm"
-          >提 交</el-button>
+          >提 交
+          </el-button>
         </div>
       </el-dialog>
     </div>
@@ -121,16 +141,18 @@
 </template>
 
 <script>
+import Avatar from '@/components/Avatar'
 import LoginForm from '@/components/LoginForm'
 import { createNamespacedHelpers, mapGetters } from 'vuex'
 import { validName } from '@/utils/validate'
 import { register } from '@/api/user'
+import { needLogin } from '@/utils/auth'
 
 const { mapActions } = createNamespacedHelpers('user')
 
 export default {
   name: 'LayoutHeader',
-  components: { LoginForm },
+  components: { Avatar, LoginForm },
   data() {
     const validateName = (rule, value, callback) => {
       if (!validName(value)) {
@@ -160,7 +182,7 @@ export default {
       },
       regRules: {
         name: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { required: true, message: '请输入昵称', trigger: 'blur' },
           { validator: validateName, trigger: 'blur' }
         ],
         email: [
@@ -180,7 +202,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(['token', 'name', 'avatar'])
   },
   watch: {
     token: function() {
@@ -208,7 +230,7 @@ export default {
       const res = await register(this.regForm)
       this.regLoading = false
       let message, type
-      if (res.code !== 200) {
+      if (res.code !== 201) {
         message = res.message
         type = 'error'
       } else {
@@ -230,11 +252,34 @@ export default {
         type: 'success',
         duration: 3 * 1000
       })
-      this.$router.go(0)
+      if (needLogin(this.$route.name)) {
+        this.$router.push({
+          path: '/'
+        })
+      }
     },
     handleCommand(command) {
-      if (command === 'logout') {
-        this.handleLogout()
+      switch (command) {
+        case 'notice':
+          this.$router.push({
+            path: '/my/notices'
+          })
+          break
+        case 'info':
+          this.$router.push({
+            path: '/my/info'
+          })
+          break
+        case 'setting':
+          this.$router.push({
+            path: '/my/setting'
+          })
+          break
+        case 'logout':
+          this.handleLogout()
+          break
+        default:
+          break
       }
     }
   }
@@ -242,171 +287,171 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "~@/styles/variables.scss";
+@import "~@/styles/variables.scss";
 
-  $themeHead: $dewberryHead;
-  $themeTail: $dewberryTail;
+$themeHead: $dewberryHead;
+$themeTail: $dewberryTail;
 
-  #layout-header {
+#layout-header {
+  padding: 0;
+}
+
+#mainHeader {
+  background: $themeHead linear-gradient(-90deg, $themeTail 0, $themeHead 100%);
+  border-top-color: $themeTail;
+  height: 50px;
+  color: #fff;
+
+  .header-container {
+    position: relative;
+    max-width: 1800px;
     padding: 0;
-  }
 
-  #mainHeader {
-    background: $themeHead linear-gradient(-90deg, $themeTail 0, $themeHead 100%);
-    background-color: $themeHead;
-    border-top-color: $themeTail;
-    height: 50px;
-    color: #fff;
-
-    .header-container {
-      position: relative;
-      max-width: 1800px;
-      padding: 0;
-
-      ol, ul {
-        margin-top: 0;
-        margin-bottom: 10px;
-      }
-    }
-
-    .header-container::before,
-    .header-container::after,
-    .nav::before,
-    .nav::after,
-    #userMenu::before,
-    #userMenu::after,
-    #userNav::before,
-    #userNav::after {
-      display: table;
-      content: " ";
+    ol, ul {
+      margin-top: 0;
+      margin-bottom: 10px;
     }
   }
 
-  #heading {
-    position: absolute;
-    top: 10px;
-    left: 20px;
+  .header-container::before,
+  .header-container::after,
+  .nav::before,
+  .nav::after,
+  #userMenu::before,
+  #userMenu::after,
+  #userNav::before,
+  #userNav::after {
+    display: table;
+    content: " ";
+  }
+}
 
-    h1 {
-      float: left;
-      max-width: 250px;
-      margin: 0;
-      overflow: hidden;
-      font-size: 20px;
-      font-weight: 400;
-      line-height: 30px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+#heading {
+  position: absolute;
+  top: 10px;
+  left: 20px;
 
-      a {
-        color: inherit;
-        text-decoration: inherit;
-      }
+  h1 {
+    float: left;
+    max-width: 250px;
+    margin: 0;
+    overflow: hidden;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 30px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    a {
+      color: inherit;
+      text-decoration: inherit;
     }
   }
+}
 
-  #nav-bar {
-    margin: 0 auto;
-    font-size: 15px;
-    text-align: center;
-
-    .nav {
-      display: inline-block;
-    }
-  }
-
-  #tool-bar {
-    position: absolute;
-    top: 12px;
-    right: 20px;
-    font-size: 12px;
-    color: #fff;
-  }
-
-  #userNav {
-    float: right;
-    margin: 0 -6px 0 10px;
-
-    .dropdown-link {
-      cursor: pointer;
-      border-radius: 4px;
-      padding: 2px 6px;
-      margin-left: 3px;
-      line-height: 20px;
-      color: #fff;
-      opacity: .9;
-
-      .user-name {
-        display: inline-block;
-        vertical-align: middle;
-        max-width: 100px;
-        overflow: hidden;
-        font-size: 15px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-
-    .guest {
-      top: -12px;
-      font-size: 15px;
-    }
-  }
+#nav-bar {
+  margin: 0 auto;
+  font-size: 15px;
+  text-align: center;
 
   .nav {
-    padding-left: 0;
-    margin-bottom: 0;
-    list-style: none;
+    display: inline-block;
+  }
+}
 
-    .divider {
-      display: block;
-      width: 2px;
-      height: 20px;
-      margin: 15px;
-      background: rgba(255,255,255,.4)
+#tool-bar {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  font-size: 12px;
+  color: #fff;
+}
+
+#userNav {
+  float: right;
+  margin: 0 -6px 0 10px;
+
+  .dropdown-link {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 3px;
+    line-height: 20px;
+    color: #fff;
+    opacity: .9;
+
+    .user-avatar {
+      line-height: 1;
+    }
+
+    .user-info {
+      display: inline-block;
+      vertical-align: middle;
+      max-width: 100px;
+      overflow: hidden;
+      font-size: 15px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 
-  .nav-default > li {
-    float: left;
+  .guest {
+    top: -12px;
+    font-size: 15px;
   }
+}
 
-  .nav > li {
-    position: relative;
+.nav {
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+
+  .divider {
     display: block;
+    width: 2px;
+    height: 20px;
+    margin: 15px;
+    background: rgba(255, 255, 255, .4)
   }
+}
 
-  .nav > li > a {
-    position: relative;
-    display: block;
-    padding: 8px 15px;
-    color: #3c4353;
-    padding: 10px 15px;
-    line-height: 30px;
-    color: #fff;
-    border-radius: 0;
-    opacity: .9;
-  }
+.nav-default > li {
+  float: left;
+}
 
-  .nav > li > button {
-    cursor: pointer;
-    position: relative;
-    display: block;
-    padding: 8px 15px;
-    background: transparent;
-    padding: 10px 15px;
-    line-height: 30px;
-    color: #fff;
-    border: none;
-    border-radius: 0;
-    opacity: .9;
-  }
+.nav > li {
+  position: relative;
+  display: block;
+}
 
-  .nav > li > button:focus {
-    outline: none;
-  }
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  line-height: 30px;
+  color: #fff;
+  border-radius: 0;
+  opacity: .9;
+}
 
-  .el-dropdown-menu {
-    width: fit-content;
-  }
+.nav > li > button {
+  cursor: pointer;
+  position: relative;
+  display: block;
+  background: transparent;
+  padding: 10px 15px;
+  line-height: 30px;
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  opacity: .9;
+}
+
+.nav > li > button:focus {
+  outline: none;
+}
+
+.el-dropdown-menu {
+  width: fit-content;
+}
 </style>
