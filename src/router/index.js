@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 /* Layout */
-import Layout from '@/layout'
+// import Layout from '@/layout'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -45,7 +45,7 @@ export const constantRoutes = [
   {
     path: '/index',
     redirect: '/index/index',
-    component: Layout,
+    component: () => import('@/layout'),
     children: [
       {
         path: 'index',
@@ -58,7 +58,7 @@ export const constantRoutes = [
   {
     path: '/posts',
     redirect: '/posts/index',
-    component: Layout,
+    component: () => import('@/layout'),
     children: [
       {
         path: 'index',
@@ -82,7 +82,7 @@ export const constantRoutes = [
   },
   {
     path: '/my',
-    component: Layout,
+    component: () => import('@/layout'),
     children: [
       {
         path: 'notices',
@@ -101,6 +101,19 @@ export const constantRoutes = [
         component: () => import('@/views/my/setting'),
         name: 'my.setting',
         meta: { title: 'my.setting' }
+      }
+    ]
+  },
+  {
+    path: '/goods',
+    redirect: '/goods/index',
+    component: () => import('@/layout'),
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/goods'),
+        name: 'goods',
+        meta: { title: 'goods' }
       }
     ]
   },

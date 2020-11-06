@@ -6,7 +6,7 @@ import { getToken, setToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
+  withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
 
@@ -55,12 +55,6 @@ service.interceptors.response.use(
   },
   error => {
     store.commit('app/TOGGLE_SPAN_LOADING', false) // close SpanLoading
-    // Refresh token silently, no sense of continuation of login status.
-    const token = error.response.headers.authorization
-    if (token !== undefined) {
-      store.commit('user/SET_TOKEN', token)
-      setToken(token)
-    }
     console.log(error.response.data)
     const { code, message } = error.response.data
     switch (code) {
