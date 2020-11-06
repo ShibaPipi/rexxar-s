@@ -31,6 +31,14 @@
               <el-button>重置搜索条件</el-button>
             </el-form-item>
           </el-form>
+          <el-pagination
+            small
+            layout="prev, pager, next"
+            :page-size="20"
+            :current-page="page"
+            :total="total"
+            @current-change="handleCurrentChange"
+          />
           <el-table
             :data="list"
             style="width: 100%"
@@ -96,7 +104,8 @@ export default {
         goodsFactPriceMin: 0
       },
       list: [],
-      page: 1
+      page: 1,
+      total: 0
     }
   },
   created() {
@@ -108,7 +117,7 @@ export default {
     },
     async getList() {
       const {
-        data: { data }
+        data: { total, current_page, data }
       } = await fetchList(
         this.form.optId,
         this.form.goodsFactPriceMax * 100,
@@ -124,8 +133,16 @@ export default {
         item.minOnSaleNormalPrice /= 100
       })
 
-      // console.log(data)
+      console.log(data)
+      console.log(this.page)
+      console.log(total)
+      this.total = total
+      this.page = current_page
       this.list = data
+    },
+    handleCurrentChange(val) {
+      this.page = val
+      this.getList()
     }
   }
 }
